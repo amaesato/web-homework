@@ -1,0 +1,6 @@
+#import "./transaction-fragment.gql"
+mutation UpdateTransaction($id: String!, $description: String, $merchantId: String, $debit: Boolean, $credit: Boolean, $amount: Float) {
+    updateTransaction(id: $id, description: $description, merchantId: $merchantId, debit: $debit, credit: $credit, amount: $amount) {
+       ...TransactionFragment 
+    }
+}

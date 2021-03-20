@@ -8,6 +8,10 @@ const httpErrors = require('http-errors')
 const path = require('path')
 const pino = require('pino')
 const pinoHttp = require('pino-http')
+const { TransactionModel } = require('./data-models/Transaction')
+const { UserModel } = require('./data-models/User')
+const { MerchantModel } = require('./data-models/Merchant')
+const { transactions, users, merchants } = require('./seed-data')
 
 module.exports = function main (options, cb) {
   // Set default options
@@ -29,9 +33,37 @@ module.exports = function main (options, cb) {
 
   const MONGO_URI = 'mongodb://localhost:27017/graphql'
 
+  const seedDB = async () => {
+    const newMerchants = await MerchantModel.insertMany(merchants)
+    const newUsers = await UserModel.insertMany(users)
+    const merchantNameToId = newMerchants.reduce((acc, m) => {
+      acc[m.name] = m._id
+      return acc
+    }, {})
+    const userNameToId = newUsers.reduce((acc, u) => {
+      acc[u.firstName] = u._id
+      return acc
+    }, {})
+    const newTransactions = transactions.map(t => {
+      return {
+        ...t,
+        userId: userNameToId[t.userId],
+        merchantId: merchantNameToId[t.merchantId]
+      }
+    })
+    TransactionModel.insertMany(newTransactions)
+  }
+
   mongoose.Promise = global.Promise
   mongoose.connect(MONGO_URI, {
     useNewUrlParser: true
+  }).then(async () => {
+    await Promise.all([
+      TransactionModel.deleteMany({}),
+      UserModel.deleteMany({}),
+      MerchantModel.deleteMany({})
+    ])
+    seedDB()
   })
 
   // Setup error handling

@@ -1,0 +1,10 @@
+#import "./user-fragment.gql"
+#import "./transaction-fragment.gql"
+query GetUsers {
+    users {
+        ...UserFragment 
+        transactions {
+          ...TransactionFragment 
+        }
+    }
+}

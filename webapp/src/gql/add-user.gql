@@ -1,0 +1,6 @@
+#import "./user-fragment.gql"
+mutation AddUser($firstName: String, $lastName: String, $dob: String) {
+  addUser(firstName: $firstName, lastName: $lastName, dob: $dob) {
+    ...UserFragment
+  }
+}

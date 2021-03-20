@@ -1,0 +1,9 @@
+fragment TransactionFragment on Transaction {
+  id
+  userId
+  description
+  merchantId
+  debit
+  credit
+  amount
+}
