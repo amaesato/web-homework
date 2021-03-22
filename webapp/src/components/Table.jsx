@@ -1,5 +1,5 @@
 import React from 'react'
-import { arrayOf, string, bool, number, oneOfType, func } from 'prop-types'
+import { arrayOf, string, func, object } from 'prop-types'
 import { css } from '@emotion/core'
 import { makeDataTestId } from '../common/utils'
 
@@ -15,18 +15,17 @@ export const Table = ({ headers, rows, label, onRowClick }) => {
       </thead>
       <tbody>
         {
-          rows.map(row => {
-            const rowId = row[0]
+          Object.keys(rows).map(id => {
             return (
               <tr
                 className='row'
                 css={rowStyles}
-                data-testid={`${label}-${rowId}`}
-                key={`transaction-${rowId}`}
-                onClick={() => onRowClick(rowId)}
+                data-testid={`${label}-${id}`}
+                key={`transaction-${id}`}
+                onClick={() => onRowClick(id)}
               >
-                {row.map((val, idx) =>
-                  <td data-testid={makeDataTestId(label, rowId, headers[idx])} key={headers[idx]}>{String(val)}</td>
+                {rows[id].map((val, idx) =>
+                  <td data-testid={makeDataTestId(label, id, headers[idx])} key={headers[idx]}>{String(val || '')}</td>
                 )}
               </tr>
             )
@@ -39,7 +38,7 @@ export const Table = ({ headers, rows, label, onRowClick }) => {
 }
 Table.propTypes = {
   headers: arrayOf(string),
-  rows: arrayOf(arrayOf(oneOfType([string, bool, number]))),
+  rows: object,
   label: string,
   onRowClick: func
 }
@@ -60,7 +59,7 @@ const headerStyles = css`
   text-overflow: ellipsis;
   overflow: hidden;
   text-transform: uppercase;
-  color: rgba(0,0,0,0.5); 
+  color: rgba(0,0,0,0.3); 
   padding: 0.5rem;
 `
 
@@ -68,6 +67,7 @@ const rowStyles = css`
   border-bottom-color: rgba(0,0,0,.12);
   border-bottom-width: 1px;
   border-bottom-style: solid;
+  font-size: 0.875rem;
   cursor: pointer;
   & > td {
     padding: 0.5rem;

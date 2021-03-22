@@ -1,13 +1,26 @@
 import { string, bool, number, shape, arrayOf } from 'prop-types'
 
+export const MerchantT = shape({
+  id: string,
+  name: string,
+  category: string,
+  description: string
+})
+
 export const TransactionT = shape({
   id: string,
-  userId: string,
+  user: {
+    id: string,
+    firstName: string,
+    lastName: string,
+    dob: string
+  },
+  merchant: MerchantT,
   description: string,
-  merchantId: string,
   debit: bool,
   credit: bool,
-  amount: number
+  amount: number,
+  date: string
 })
 
 export const UserT = shape({
@@ -16,11 +29,4 @@ export const UserT = shape({
   lastName: string,
   dob: string,
   transactions: arrayOf(TransactionT)
-})
-
-export const MerchantT = shape({
-  id: string,
-  name: string,
-  category: string,
-  description: string
 })

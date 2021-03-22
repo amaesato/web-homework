@@ -19,11 +19,12 @@ const mutation = new GraphQLObjectType({
         merchantId: { type: GraphQLString },
         debit: { type: GraphQLBoolean },
         credit: { type: GraphQLBoolean },
-        amount: { type: GraphQLFloat }
+        amount: { type: GraphQLFloat },
+        date: { type: GraphQLString }
       },
       /* eslint-disable-next-line camelcase */
-      resolve: async (parentValue, { userId, description, merchantId, debit, credit, amount }) => {
-        const transaction = await TransactionModel.create({ userId, description, merchantId, debit, credit, amount })
+      resolve: async (parentValue, { userId, description, merchantId, debit, credit, amount, date }) => {
+        const transaction = await TransactionModel.create({ userId, description, merchantId, debit, credit, amount, date })
         transaction.id = transaction._id
         return transaction
       }
@@ -45,13 +46,15 @@ const mutation = new GraphQLObjectType({
         id: { type: graphql.GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
         merchantId: { type: GraphQLString },
+        userId: { type: GraphQLString },
         debit: { type: GraphQLBoolean },
         credit: { type: GraphQLBoolean },
-        amount: { type: GraphQLFloat }
+        amount: { type: GraphQLFloat },
+        date: { type: GraphQLString }
       },
       /* eslint-disable-next-line camelcase */
-      resolve: async (parentValue, { id, description, merchantId, debit, credit, amount }) => {
-        const updated = await TransactionModel.findByIdAndUpdate(id, { $set: { description, merchantId, debit, credit, amount } }, { new: true })
+      resolve: async (parentValue, { id, description, merchantId, userId, debit, credit, amount, date }) => {
+        const updated = await TransactionModel.findByIdAndUpdate(id, { $set: { description, merchantId, userId, debit, credit, amount, date } }, { new: true })
         updated.id = updated._id
         return updated
       }

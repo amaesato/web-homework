@@ -1,5 +1,4 @@
-import { TransactionT, UserT } from './propType'
-import { arrayOf, string, oneOfType } from 'prop-types'
+import { string } from 'prop-types'
 
 export const makeDataTestId = (label, id, identifier) => `${label}-${id}${identifier ? `-${identifier}` : ''}`
 makeDataTestId.propTypes = {
@@ -8,18 +7,13 @@ makeDataTestId.propTypes = {
   identifier: string
 }
 
-export const getHeadersAndRows = (data = []) => {
-  const [headers, rows] = data.reduce(([headers, rows], item) => {
-    const keys = Object.keys(item).filter(k => k !== '__typename' && k !== 'transactions')
-    if (!headers.length) {
-      headers = [...keys]
-    }
-    rows.push(keys.map(key => item[key]))
-    return [headers, rows]
-  }, [[], []])
-  return [headers, rows]
+export const parseValue = (value) => {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return value
+  }
 }
-getHeadersAndRows.propTypes = arrayOf(oneOfType([TransactionT, UserT]))
 
 const romanKeys = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
 const ROMAN_NUMERALS_MAP = {

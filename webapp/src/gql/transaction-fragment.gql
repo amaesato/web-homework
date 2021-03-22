@@ -1,9 +1,19 @@
+#import "./user-fragment.gql"
+
 fragment TransactionFragment on Transaction {
   id
-  userId
+  user {
+    ...UserFragment
+  }
+  merchant {
+    id
+    name
+    category
+    description
+  }
   description
-  merchantId
   debit
   credit
   amount
+  date
 }

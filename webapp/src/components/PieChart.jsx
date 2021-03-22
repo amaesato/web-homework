@@ -1,8 +1,9 @@
+import React from 'react'
 import css from '@emotion/css'
 import { arrayOf } from 'prop-types'
-import React from 'react'
 import { PieChart } from 'react-minimal-pie-chart'
 import { MerchantT, TransactionT } from '../common/propType'
+import { getCountPerCategory } from '../common/transaction-utils'
 
 const colorMap = {
   'retail': '#3EB595',
@@ -12,31 +13,14 @@ const colorMap = {
   'other': '#1A1A1A'
 }
 
-const getCategories = (merchants) => merchants.reduce((acc, m) => {
-  acc[m.id] = m.category
-  return acc
-}, {})
-
-const getTotalCountByCat = (categories, transactions) => {
-  const [catCountMap, total] = transactions.reduce(([catCountMap, total], t) => {
-    total = total + t.amount
-    const prevCount = catCountMap[categories[t.merchantId]] || 0
-    catCountMap[categories[t.merchantId]] = t.amount + prevCount
-    return [catCountMap, total]
-  }, [{}, 0])
-  return [catCountMap, total]
-}
-
 export const PieChartViz = ({ transactions, merchants }) => {
-  if (!transactions || !merchants) return null
-  const categories = getCategories(merchants)
-  const [catCountMap, total] = getTotalCountByCat(categories, transactions)
-  const getData = transactions?.map(t => {
-    const title = categories[t.merchantId]
+  if (!transactions.length || !merchants.length) return null
+  const [countPerCat, total] = getCountPerCategory(merchants, transactions)
+  const data = Object.keys(countPerCat).map(key => {
     return {
-      title,
-      value: catCountMap[title],
-      color: colorMap[title]
+      title: key,
+      value: countPerCat[key],
+      color: colorMap[key]
     }
   })
   return (
@@ -44,18 +28,21 @@ export const PieChartViz = ({ transactions, merchants }) => {
       <h3>Total Spent Per Category</h3>
       <PieChart
         animate
-        data={getData}
+        data={data}
         totalValue={total}
       />
     </div>
   )
 }
 PieChartViz.propTypes = {
-  transactions: arrayOf(TransactionT),
-  merchants: arrayOf(MerchantT)
+  transactions: arrayOf(TransactionT).isRequired,
+  merchants: arrayOf(MerchantT).isRequired
 }
 
 const chartStyles = css`
+  padding: 1.5rem;
   max-width: 25rem;
-  margin: 1.5rem;
+  & > h3 {
+    text-align: center;
+  }
 `

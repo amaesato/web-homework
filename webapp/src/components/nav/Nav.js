@@ -17,11 +17,16 @@ const navStyles = css`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 `
 const navLinkStyles = css`
+  background-color: black;
+  padding: 1rem;
+  flex: 1;
   & > a {
-    color: black;
+    color: white;
     font-weight: 600;
     text-decoration: none;
     border-bottom-width: 1px;
@@ -35,6 +40,6 @@ const navLinkStyles = css`
   }
 
   & > .active {
-    border-bottom-color: black;
+    border-bottom-color: white;
   }
 `

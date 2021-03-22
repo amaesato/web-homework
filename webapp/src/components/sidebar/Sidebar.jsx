@@ -20,17 +20,21 @@ Sidebar.propTypes = {
 const isOpenStyles = css`
   transform: translate(0);
   width: 33%;
-  position: fixed;
+  position: absolute;
   top: 0;
   bottom: 0;
   right: 0;
-  background-color: #fafafa;
+  background-color: #f5f4f4;
   transition: 0.35s;
   transition: transform 0.35s ease-in;
+  padding: 1.5rem;
+  box-shadow: -1px 0px 10px 0px rgb(0 0 0 / 30%);
 `
 const isClosedStyles = css`
-  transform: translate(100%);
+  transform: translate(110%);
 `
 const closeBtnStyles = css`
-  margin: 1rem;
+  border-width: 0;
+  font-weight: 600;
+  text-transform: uppercase;
 `

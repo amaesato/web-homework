@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Redirect, Route } from 'react-router-dom'
 import { css } from '@emotion/core'
 import { Nav } from './components/nav/Nav'
-import { HomeContainer } from './views/home'
+import { TransactionsContainer } from './views/transactions'
 import { UsersContainer } from './views/users'
 import { AppProvider } from './app-context'
 
@@ -13,9 +13,9 @@ function AppRouter () {
         <div css={styles}>
           <Nav />
           <div className='mainContent'>
-            <Route path='/transactions' render={() => <HomeContainer />} />
-            <Route path='/users' render={() => <UsersContainer />} />
-            <Redirect to='/transactions' />
+            <Route exact path='/' render={() => <Redirect to='/transactions' />} />
+            <Route component={TransactionsContainer} path='/transactions' />
+            <Route component={UsersContainer} path='/users' />
           </div>
         </div>
       </AppProvider>
@@ -31,6 +31,7 @@ const styles = css`
   height: 100vh;
   & > .mainContent {
     flex: 1;
-    margin: 1rem;
+    position: relative;
+    padding: 1rem;
   }
 `

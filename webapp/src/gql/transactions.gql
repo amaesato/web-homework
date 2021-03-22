@@ -1,6 +1,22 @@
 #import "./transaction-fragment.gql"
-query GetTransactions {
-    transactions {
-       ...TransactionFragment 
-    }
+query GetTransactions(
+  $description: String
+  $merchantId: String
+  $userId: String
+  $debit: Boolean
+  $credit: Boolean
+  $amount: Float
+  $date: String
+) {
+  transactions(
+    description: $description
+    merchantId: $merchantId
+    userId: $userId
+    debit: $debit
+    credit: $credit
+    amount: $amount
+    date: $date
+  ) {
+    ...TransactionFragment
+  }
 }

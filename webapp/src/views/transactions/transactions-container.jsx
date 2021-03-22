@@ -3,33 +3,32 @@ import { useMutation, useQuery, useLazyQuery } from '@apollo/client'
 import GET_TRANSACTIONS from '../../gql/transactions.gql'
 import GET_TRANSACTION from '../../gql/transaction.gql'
 import ADD_TRANSACTION from '../../gql/add-transaction.gql'
+import UPDATE_TRANSACTION from '../../gql/update-transaction.gql'
 import ADD_USER from '../../gql/add-user.gql'
 import GET_USERS from '../../gql/users.gql'
 import GET_MERCHANTS from '../../gql/merchants.gql'
 import DELETE_TRANSACTION from '../../gql/delete-transaction.gql'
 import { useAppContext } from '../../hooks/useAppContext'
-import { Home } from './home'
+import { Transactions } from './transactions'
 
-export function HomeContainer () {
+export function TransactionsContainer () {
+  const [activeId, setActiveId] = useState()
   const { isSidebarOpen, setIsSidebarOpen } = useAppContext()
-  const [focusedId, setFocusedId] = useState()
   const { loading, error, data = {} } = useQuery(GET_TRANSACTIONS)
   const { data: merchantsData } = useQuery(GET_MERCHANTS)
-  const [getTransaction, { data: transactionData }] = useLazyQuery(GET_TRANSACTION)
   const { data: usersData } = useQuery(GET_USERS)
+  const [getTransaction, { data: transactionData }] = useLazyQuery(GET_TRANSACTION)
   const [addTransaction] = useMutation(ADD_TRANSACTION)
+  const [updateTransaction] = useMutation(UPDATE_TRANSACTION)
   const [addUser] = useMutation(ADD_USER)
   const [deleteTransaction] = useMutation(DELETE_TRANSACTION)
 
-  const onAddTransaction = useCallback((variables) => {
-    const vars = {
-      ...variables,
-      amount: Number(variables?.amount),
-      credit: Boolean(variables?.credit),
-      debit: Boolean(variables?.debit)
-    }
-    addTransaction({ variables: vars, refetchQueries: [{ query: GET_TRANSACTIONS }] })
-  }, [addTransaction])
+  const onAddUpdateTransaction = useCallback((variables) => {
+    const query = variables.id ? updateTransaction : addTransaction
+    query({ variables, refetchQueries: [{ query: GET_TRANSACTIONS }] })
+    setIsSidebarOpen(false)
+    setActiveId(undefined)
+  }, [addTransaction, updateTransaction])
 
   const onAddUser = useCallback((variables) => {
     addUser({ variables, refetchQueries: [{ query: GET_USERS }] })
@@ -40,38 +39,38 @@ export function HomeContainer () {
   })
 
   const onTransactionSelect = useCallback((id) => {
-    if (focusedId !== id) setFocusedId(id)
+    if (activeId !== id) setActiveId(id)
     if (!isSidebarOpen) setIsSidebarOpen(true)
-  }, [focusedId, isSidebarOpen, setFocusedId, setIsSidebarOpen])
+  }, [activeId, isSidebarOpen, setActiveId, setIsSidebarOpen])
 
   useEffect(() => {
-    if (focusedId) {
-      getTransaction({ variables: { id: focusedId } })
+    if (activeId) {
+      getTransaction({ variables: { id: activeId } })
     }
-  }, [focusedId])
+  }, [activeId])
 
   useEffect(() => {
-    if (!isSidebarOpen && focusedId) {
-      setFocusedId(undefined)
+    if (!isSidebarOpen && activeId) {
+      setActiveId(undefined)
     }
-  }, [isSidebarOpen, setFocusedId])
+  }, [isSidebarOpen, setActiveId, activeId])
 
   if (loading) return <>Loading...</>
 
   if (error) return <>¯\_(ツ)_/¯</>
 
   return (
-    <Home
-      activeId={focusedId}
-      activeTransaction={transactionData?.transaction}
+    <Transactions
+      activeId={activeId}
+      activeTransaction={activeId ? transactionData?.transaction : undefined}
       merchants={merchantsData?.merchants || []}
-      onAddOrUpdate={onAddTransaction}
+      onAddOrUpdate={onAddUpdateTransaction}
       onAddUser={onAddUser}
       onDeleteTransaction={onDeleteTransaction}
       onTransactionSelect={onTransactionSelect}
       setIsSidebarOpen={setIsSidebarOpen}
       transactions={data?.transactions || []}
-      users={usersData?.users}
+      users={usersData?.users || []}
     />
   )
 }

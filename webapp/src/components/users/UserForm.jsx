@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Input } from '../Input'
 import { func } from 'prop-types'
 import { UserT } from '../../common/propType'
-import { Form } from '../Form'
+import { Form, Input } from '../form'
 
 const fieldTypeMap = {
   firstName: 'text',
