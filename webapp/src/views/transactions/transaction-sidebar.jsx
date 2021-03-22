@@ -34,7 +34,13 @@ export const TransactionSidebar = ({
           </Button>
         )}
         {isAddUser && <UserForm onSubmit={onUserAddSubmit} />}
-        <TransactionForm activeId={activeId} merchants={merchants} onSubmit={onAddOrUpdate} transaction={activeTransaction} users={users} />
+        <TransactionForm
+          activeId={activeId}
+          merchants={merchants}
+          onSubmit={onAddOrUpdate}
+          transaction={activeTransaction}
+          users={users}
+        />
       </div>
     </Sidebar>
   )

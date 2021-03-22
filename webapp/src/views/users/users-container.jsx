@@ -4,7 +4,6 @@ import { useQuery, useLazyQuery } from '@apollo/client'
 import GET_USER from '../../gql/user.gql'
 import GET_USERS from '../../gql/users.gql'
 import GET_TRANSACTIONS from '../../gql/transactions.gql'
-import { Sidebar } from '../../components/sidebar/sidebar'
 import { View } from '../../components/View'
 import { Table } from '../../components/Table'
 import { getUserHeadersAndRows } from '../../common/user-utils'
@@ -24,7 +23,7 @@ export function UsersContainer () {
     <View css={viewStyles}>
       <Route exact path={match.url} render={() => (
         <>
-          <h2>Users</h2>
+          <p>Users</p>
           <Table
             headers={headers}
             onRowClick={(id) => id && window.location.replace(`/users/${id}`)}
@@ -42,9 +41,6 @@ export function UsersContainer () {
           user={userData?.user}
         />
       )} />
-      <Sidebar>
-        <div>{`User ${userData?.user?.firstName}`}</div>
-      </Sidebar>
     </View>
   )
 }
@@ -52,4 +48,10 @@ export function UsersContainer () {
 const viewStyles = css`
   flex-direction: column;
   overflow-x: hidden;
+  & > p {
+    color: black;
+    margin: 0;
+    padding: 1rem 0;
+    font-weight: 600;
+  }
 `

@@ -33,7 +33,7 @@ const ROMAN_NUMERALS_MAP = {
 }
 
 export const getRomanNumeral = (num) => {
-  if (typeof num !== 'number' || num > 1000) return num
+  if (typeof num !== 'number' || num > 3999) return num
   const numeral = []
   const count = romanKeys.length
   const converter = (nextNum) => {

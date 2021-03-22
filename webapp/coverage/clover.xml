@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1616438860741" clover="3.2.0">
-  <project timestamp="1616438860741" name="All files">
-    <metrics statements="55" coveredstatements="52" conditionals="28" coveredconditionals="23" methods="14" coveredmethods="13" elements="97" coveredelements="88" complexity="0" loc="55" ncloc="55" packages="2" files="6" classes="6"/>
+<coverage generated="1616451902514" clover="3.2.0">
+  <project timestamp="1616451902514" name="All files">
+    <metrics statements="55" coveredstatements="55" conditionals="28" coveredconditionals="23" methods="14" coveredmethods="14" elements="97" coveredelements="92" complexity="0" loc="55" ncloc="55" packages="2" files="6" classes="6"/>
     <package name="mocks">
       <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="transactions-data.js" path="/Users/anniehall/Documents/annie/side_projects/web-homework/webapp/mocks/transactions-data.js">
@@ -15,7 +15,7 @@
       </file>
     </package>
     <package name="src.common">
-      <metrics statements="52" coveredstatements="49" conditionals="28" coveredconditionals="23" methods="14" coveredmethods="13"/>
+      <metrics statements="52" coveredstatements="52" conditionals="28" coveredconditionals="23" methods="14" coveredmethods="14"/>
       <file name="propType.js" path="/Users/anniehall/Documents/annie/side_projects/web-homework/webapp/src/common/propType.js">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="3" count="2" type="stmt"/>
@@ -58,17 +58,17 @@
         <line num="22" count="2" type="stmt"/>
       </file>
       <file name="utils.js" path="/Users/anniehall/Documents/annie/side_projects/web-homework/webapp/src/common/utils.js">
-        <metrics statements="20" coveredstatements="17" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="3"/>
+        <metrics statements="20" coveredstatements="20" conditionals="8" coveredconditionals="8" methods="4" coveredmethods="4"/>
         <line num="3" count="2" type="cond" truecount="2" falsecount="0"/>
         <line num="4" count="2" type="stmt"/>
         <line num="10" count="2" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
+        <line num="11" count="3" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
         <line num="18" count="2" type="stmt"/>
         <line num="19" count="2" type="stmt"/>
         <line num="35" count="2" type="stmt"/>
-        <line num="36" count="3" type="cond" truecount="4" falsecount="0"/>
+        <line num="36" count="4" type="cond" truecount="4" falsecount="0"/>
         <line num="37" count="2" type="stmt"/>
         <line num="38" count="2" type="stmt"/>
         <line num="39" count="2" type="stmt"/>

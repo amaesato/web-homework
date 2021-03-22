@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from '@emotion/core'
-import { arrayOf, func, string } from 'prop-types'
+import { arrayOf, bool, func, string } from 'prop-types'
 import { MerchantT, TransactionT, UserT } from '../../common/propType'
 import { Button } from '../../components/Button'
 import { View } from '../../components/View'
@@ -13,6 +13,7 @@ export const Transactions = ({
   transactions,
   users,
   activeTransaction,
+  transactionLoading,
   setIsSidebarOpen,
   onAddOrUpdate,
   onTransactionSelect,
@@ -26,11 +27,7 @@ export const Transactions = ({
   return (
     <View css={viewStyles}>
       <h2>Transactions</h2>
-      <Button css={css`
-        position: absolute;
-        top: 1.5rem;
-        right: 1.5rem;
-      `} onClick={() => setIsSidebarOpen(true)}>+ Transaction</Button>
+      <Button css={btnStyles} onClick={() => setIsSidebarOpen(true)}>+ Transaction</Button>
       <Table
         headers={headers}
         onRowClick={(id) => onTransactionSelect(id)}
@@ -48,6 +45,7 @@ export const Transactions = ({
           onDeleteTransaction(activeId)
           setIsSidebarOpen(false)
         }}
+        transactionLoading={transactionLoading}
         users={users}
       />
     </View>
@@ -56,6 +54,7 @@ export const Transactions = ({
 Transactions.propTypes = {
   activeId: string,
   activeTransaction: TransactionT,
+  transactionLoading: bool,
   merchants: arrayOf(MerchantT).isRequired,
   onAddOrUpdate: func,
   onAddUser: func,
@@ -68,4 +67,9 @@ Transactions.propTypes = {
 
 const viewStyles = css`
   flex-direction: column;
+`
+const btnStyles = css`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
 `

@@ -1,81 +1,145 @@
 import React, { useEffect, useState } from 'react'
-import { Input } from '../Input'
-import { arrayOf, func } from 'prop-types'
+import { arrayOf, func, string } from 'prop-types'
 import { MerchantT, TransactionT, UserT } from '../../common/propType'
-import { Form } from '../Form'
+import { parseValue } from '../../common/utils'
+import { Form, Input } from '../form'
 
-const fieldTypeMap = {
+const inputDefinitions = {
+  date: 'date',
   description: 'text',
-  amount: 'number',
-  userId: 'select',
-  merchantId: 'select',
-  debit: 'checkbox',
-  credit: 'checkbox'
+  amount: 'number'
 }
 
 const defaultInput = {
+  date: '',
   description: '',
-  amount: 0,
+  amount: '',
   userId: '',
   merchantId: '',
   debit: false,
   credit: false
 }
 
-export const TransactionForm = ({ onSubmit, transaction, users, merchants }) => {
-  const [input, setInput] = useState({
-    description: transaction?.description || '',
-    amount: transaction?.amount || 0,
-    userId: transaction?.['userId'] || '',
-    merchantId: transaction?.['merchantId'] || '',
-    debit: transaction?.debit || false,
-    credit: transaction?.credit || false
-  })
-  const options = {
-    userId: users,
-    merchantId: merchants
+export const TransactionForm = ({ onSubmit, transaction, users, merchants, activeId }) => {
+  const [fieldInputs, setFieldInput] = useState(defaultInput)
+  const [debitOrCredit, setDebitOrCredit] = useState()
+  const onInputChange = (evt) => {
+    setFieldInput({ ...fieldInputs, [evt.currentTarget.name]: evt.currentTarget.value })
   }
+
+  const onTransactionSubmit = () => {
+    onSubmit({
+      id: transaction?.id,
+      date: fieldInputs?.date,
+      description: fieldInputs?.description,
+      amount: parseValue(fieldInputs?.amount),
+      credit: debitOrCredit === 'credit',
+      debit: debitOrCredit === 'debit',
+      userId: fieldInputs?.userId,
+      merchantId: fieldInputs?.merchantId
+    })
+    setFieldInput(defaultInput)
+  }
+
+  const renderDefaultOption = !activeId && <option>-- Select --</option>
+
   useEffect(() => {
-    setInput(transaction || defaultInput)
+    setFieldInput(transaction ? {
+      date: transaction?.date || '',
+      description: transaction?.description || '',
+      amount: transaction?.amount || 0,
+      debit: transaction?.debit || false,
+      credit: transaction?.credit || false,
+      userId: transaction?.user?.id,
+      merchantId: transaction?.merchant?.id
+    } : defaultInput)
   }, [transaction])
 
   return (
     <>
-      <Form onSubmit={() => {
-        onSubmit(input)
-        !transaction && setInput(defaultInput)
+      <Form onSubmit={(e) => {
+        e.preventDefault()
+        onTransactionSubmit()
       }}>
-        {Object.keys(fieldTypeMap).map(key => {
-          const fieldType = fieldTypeMap[key]
+        {Object.keys(inputDefinitions).map(key => {
+          const type = inputDefinitions[key]
+          const label = type !== 'checkbox' && key
           return (
-            <label className={fieldType} htmlFor={key} key={key}>
-              {key}
-              {fieldType === 'select' && !transaction ? (
-                <select id={key} name={key} onBlur={evt => setInput({ ...input, [key]: evt.currentTarget.value })}>
-                  <option>--Select--</option>
-                  {(options[key] || []).map(opt => {
-                    const label = opt?.name || `${opt.firstName} ${opt.lastName}`
-                    return (
-                      <option key={opt.id} value={opt.id}>{label}</option>
-                    )
-                  }
-                  )}
-                </select>
-              ) : (
-                <Input
-                  checked={fieldType === 'checkbox' ? Boolean(input[key]) : undefined}
-                  id={key}
-                  key={key}
-                  name={key}
-                  onChange={evt => setInput({ ...input, [key]: evt.currentTarget.value })}
-                  type={fieldType}
-                  value={input[key]}
-                />
-              )}
+            <label className={type} htmlFor={key} key={key}>
+              {label}
+              <Input
+                id={key}
+                key={key}
+                name={key}
+                onChange={evt => onInputChange(evt)}
+                placeholder={type === 'number' ? '0.00' : undefined}
+                required
+                type={type}
+                value={fieldInputs[key]}
+              />
             </label>
           )
         })}
-        <Input className='submit' type='submit' value={transaction?.id ? 'Update' : 'Create'} />
+        <label className='checkbox' htmlFor='credit'>
+          <Input
+            checked={fieldInputs?.credit || debitOrCredit === 'credit'}
+            id='credit'
+            name='credit'
+            onChange={(evt) => setDebitOrCredit(evt.currentTarget.name)}
+            type='checkbox'
+            value={debitOrCredit === 'credit'}
+          />
+            Credit
+        </label>
+        <label className='checkbox' htmlFor='debit'>
+          <Input
+            checked={fieldInputs?.debit || debitOrCredit === 'debit'}
+            id='debit'
+            name='debit'
+            onChange={(evt) => setDebitOrCredit(evt.currentTarget.name)}
+            type='checkbox'
+            value={debitOrCredit === 'debit'}
+          />
+            Debit
+        </label>
+        {(transaction || !activeId) && (
+        <>
+          <label htmlFor='userId'>
+          Employee
+            <select
+              defaultValue={transaction?.user?.id}
+              id='userId'
+              name='userId'
+              onBlur={evt => onInputChange(evt)}
+              required
+            >
+              {renderDefaultOption}
+              {(users || []).map(user => {
+                const name = `${user?.firstName} ${user?.lastName}`
+                return <option key={user?.id} name={name} value={user?.id}>{name}</option>
+              })}
+            </select>
+          </label>
+          <label htmlFor='merchantId'>
+          Merchant
+            <select
+              defaultValue={transaction?.merchant?.id}
+              id='merchantId'
+              name='merchantId'
+              onBlur={evt => onInputChange(evt)}
+              required
+            >
+              {renderDefaultOption}
+              {(merchants || []).map(merchant => {
+                const name = merchant.name
+                return <option key={merchant?.id} name={name} value={merchant?.id}>{name}</option>
+              })}
+            </select>
+
+          </label>
+        </>
+        )}
+        <Input className='submit' type='submit' value={transaction?.id ? 'Update' : 'Add'} />
       </Form>
     </>
   )
@@ -84,5 +148,6 @@ TransactionForm.propTypes = {
   onSubmit: func,
   transaction: TransactionT,
   users: arrayOf(UserT),
-  merchants: arrayOf(MerchantT)
+  merchants: arrayOf(MerchantT),
+  activeId: string
 }
