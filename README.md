@@ -1,35 +1,30 @@
-# Divvy Homework Assignment
+# Divvy Homework
 
-This repository provides a starting point for a basic React + GraphQL application.
-All of the configuration boilerplate is complete so you can start by writing the code that you want us to see.
+## Objectives
 
-Please **fork** this repo a **private repo** on your GitHub account.
+[X] Write a basic user interface that allows users to enter, edit, and remove transactions.
 
-Please share your finished project repo with @thawk55 and @lwintch as part of your submission.
+- Transaction create, update, and delete
+- Add User or select existing users, when creating transaction
+- add, update, delete mutations(and queries) for Transaction and User.
+- CRUD for Merchant added to the `webserver`, but not implemented in the frontend.
 
-<br />
+[X] Provide a pie chart of total spent per category
 
+[X] Create a user setting that can convert the displayed numbers to Roman Numerals.
 
-## Project Setup
+- Created/tested `getRomanNumeral`, implemented a simple button `/users/:id`
 
-This repository is split into a web app directory (eg `/webapp`) and two server directories (eg `/webserver` and `/elixir`).
+[X] Seed the database.
 
-The `/webserver` one includes a functional GraphQL server in NodeJS with MongoDB backing it.
+- modified the web server `index.js` to tear-down/seed db
 
-The `/elixir` one includes a functional GraphQL server in Elixir with Postgresql backing it.
+[X] Add a user experience and styling
 
-If you are applying for backend, you should use the elixir code.
-If you are applying for frontend, feel free to use either.
-
-This project is _intentionally not utilizing 3rd party services or create-react-app_ to give you the opportunity to showcase your talents wherever they are, be it the front end or the back end.
-
-## Instructions
-
-If you are pursuing a full stack or backend position, please include elixir code changes in your homework.
-
-See the [Frontend instructions](webapp/README.md) for frontend focused instructions.  If front end only, use the node server in `/webserver`.
-
-See the [Backend instructions](backend.md) for backend focused instructions.
-
-
-
+- Views `/transactions`, `/users`, and `/userId`. Edit/add transactions within a sidebar
+- Top level views handle querying, mutations, and top level state
+- Added `AppContext` for the sidebar actions
+- Added styled components `Button`, `Form`, `Input`, `Table`, `View`
+- Added common propTypes and utils to `/common`
+- Added tests for util functions
+- Added queries, mutations, and fragments to `/gql`
