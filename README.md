@@ -1,5 +1,5 @@
 # Divvy Homework
-
+- Followed the directions in `/webapp` for setup. `yarn install`, `yarn start`
 ## Objectives
 
 [X] Write a basic user interface that allows users to enter, edit, and remove transactions.
